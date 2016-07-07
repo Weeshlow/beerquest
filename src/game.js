@@ -37,6 +37,7 @@ define([
                 httpGet: this.httpGet,
                 addBeerCallback: this.addBeerCallback,
                 addBeer: this.addBeer,
+                getBeers: this.getBeers,
                 spriteClick: this.spriteClick
 
             });
@@ -64,7 +65,8 @@ define([
             this.background.anchor.setTo(0.5, 0.5);
             this.background.fixedToCamera = true;
 
-            this.title = this.game.add.text(-1270,-960, "BeerQuest", {font: "64px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            //this.title = this.game.add.text(-1270,-960, "BeerQuest", {font: "64px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.title = this.game.add.text(0,0, "BeerQuest", {font: "64px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
             this.title.fixedToCamera = true;
 
             this.backGroup = this.game.add.group();
@@ -73,32 +75,10 @@ define([
 
             this.beers = [];
 
-            var beer = null;
-            var distance = null;
-            for (var i = 0; i < 10; i++) {
-                beer = this.game.add.sprite(this.game.rnd.integerInRange(-1024,-512), this.game.rnd.integerInRange(-768,-384), 'beermug2');
-                beer.anchor.setTo(0.5, 0.5);
-                beer.inputEnabled = true;
-                beer.events.onInputUp.add(this.spriteClick, this);
-                distance = this.game.rnd.integerInRange(0,2);
-                if (distance < 1) {
-                    beer.scale.setTo(1);
-                    this.frontGroup.add(beer);
-                } else if (distance < 2) {
-                    beer.scale.setTo(0.5);
-                    this.middleGroup.add(beer);
-                } else {
-                    beer.scale.setTo(0.25);
-                    this.backGroup.add(beer);
-                }
-
-                this.beers.push(beer);
-
-            }
-
             this.cursors = this.game.input.keyboard.createCursorKeys();
 
-            this.httpGet('http://localhost:8080/v2/?key=7d1915a6aa7315b63c14b5464c3e2476/search?q=Goosinator&type=beer', this.addBeerCallback);
+            this.getBeers();
+
 
         },
 
@@ -153,7 +133,6 @@ define([
                 }
             }
 
-
             // change this value to alter the amount of damping, lower values = smoother camera movement
             //var lerp = 0.1;
             //cameraPos.x += (this.square.x - cameraPos.x) * lerp;
@@ -165,12 +144,44 @@ define([
         },
 
 
+        getBeers: function() {
+
+            //this.httpGet('http://localhost:8080/v2/?key=7d1915a6aa7315b63c14b5464c3e2476/search?q=Goosinator&type=beer', this.addBeerCallback);
+
+            var beer = null;
+            for (var i = 0; i < 10; i++) {
+                this.addBeer({name: "Beer"+i});
+            }
+
+        },
+
+
         addBeerCallback: function(response) {
             this.addBeer('Beer here.');
         },
 
-        addBeer: function(beer) {
-            console.log('Beer: ' + beer );
+        addBeer: function(beerData) {
+
+            var beer = this.game.add.sprite(this.game.rnd.integerInRange(-1024,-512), this.game.rnd.integerInRange(-768,-384), 'beermug2');
+            beer.anchor.setTo(0.5, 0.5);
+            beer.inputEnabled = true;
+            beer.events.onInputUp.add(this.spriteClick, this);
+            var distance = this.game.rnd.integerInRange(0,2);
+            if (distance < 1) {
+                beer.scale.setTo(1);
+                this.frontGroup.add(beer);
+            } else if (distance < 2) {
+                beer.scale.setTo(0.5);
+                this.middleGroup.add(beer);
+            } else {
+                beer.scale.setTo(0.25);
+                this.backGroup.add(beer);
+            }
+            this.beers.push(beer);
+            var beerText = this.game.add.text(beer.x,beer.y, beerData.name, {font: "32px Arial", fill: "#000000"})
+            beer.addChild(beerText);
+            beerText.x = 0;
+            beerText.y = 0;
         },
 
         httpGet: function(theUrl, callback)
