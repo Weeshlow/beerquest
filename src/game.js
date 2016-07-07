@@ -22,6 +22,8 @@ define([
 
         background: null,
 
+        title: null,
+
         currentDrift: null,
 
         //beer2: null,
@@ -61,6 +63,9 @@ define([
             this.background.scale.setTo(2);
             this.background.anchor.setTo(0.5, 0.5);
             this.background.fixedToCamera = true;
+
+            this.title = this.game.add.text(-1270,-960, "BeerQuest", {font: "64px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.title.fixedToCamera = true;
 
             this.backGroup = this.game.add.group();
             this.middleGroup = this.game.add.group();
