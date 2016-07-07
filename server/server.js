@@ -8,6 +8,11 @@ proxy.on('proxyRes', function(proxyReq, req, res, options) {
     res.setHeader('Access-Control-Allow-Origin', '*');
 });
 
+proxy.on('proxyReq', function(proxyReq, req, res, options) {
+    console.log('Proxy Request Host: ' + proxyReq.host);
+    console.log('Req: ' + proxyReq);
+});
+
 proxy.on('error', function(e) {
     console.log('Error: ', e);
 });
