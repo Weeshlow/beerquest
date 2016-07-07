@@ -78,32 +78,41 @@ define([
             var itn = this.game.add.text(0,0, "Name:", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
             this.infoPanel.addChild(itn);
             itn.y = 36;
-            this.infoTextName = this.game.add.text(0,0, "", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
-            
+            this.infoTextName = this.game.add.text(0,0, "Some type of beer", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.infoTextName.anchor.setTo(0.0,0.0);
+            this.infoTextName.x = 256;
             itn.addChild(this.infoTextName);
 
             var itog = this.game.add.text(0,0, "Original Gravity:", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
             itn.addChild(itog);
             itog.y = 36;
-            this.infoTextOG = this.game.add.text(0,0, "", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.infoTextOG = this.game.add.text(0,0, "9.8m/s^2", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.infoTextOG.anchor.setTo(0.0,0.0);
+            this.infoTextOG.x = 256;
             itog.addChild(this.infoTextOG);
 
             var itabv = this.game.add.text(0,0, "ABV:", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
             itog.addChild(itabv);
             itabv.y = 36;
-            this.infoTextABV = this.game.add.text(0,0, "", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.infoTextABV = this.game.add.text(0,0, "100%", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.infoTextABV.anchor.setTo(0.0,0.0);
+            this.infoTextABV.x = 256;
             itabv.addChild(this.infoTextABV);
 
             var itibu = this.game.add.text(0,0, "IBU:", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
             itabv.addChild(itibu);
             itibu.y = 36;
-            this.infoTextIBU = this.game.add.text(0,0, "", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.infoTextIBU = this.game.add.text(0,0, "Very Bitter", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.infoTextIBU.anchor.setTo(0.0,0.0);
+            this.infoTextIBU.x = 256;
             itibu.addChild(this.infoTextIBU);
 
             var its = this.game.add.text(0,0, "Style:", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
             itibu.addChild(its);
             its.y = 36;
-            this.infoTextStyle = this.game.add.text(0,0, "", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.infoTextStyle = this.game.add.text(0,0, "Beer", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.infoTextStyle.anchor.setTo(0.0,0.0);
+            this.infoTextStyle.x = 256;
             its.addChild(this.infoTextStyle);
 
             this.backGroup = this.game.add.group();
