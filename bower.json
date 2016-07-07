@@ -1,0 +1,20 @@
+{
+  "name": "BeerQuest",
+  "version": "0.0.0",
+  "description": "A visualization for beer",
+
+  "authors": [
+    "bwheeler <bwheeler@uncharted.software>"
+  ],
+
+  "license": "Unknown",
+
+  "dependencies": {
+    "requirejs": "latest",
+    "phaser": "latest"
+  },
+
+  "ignore": [
+    "src/libs"
+  ]
+}
