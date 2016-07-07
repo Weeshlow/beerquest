@@ -24,10 +24,14 @@ define([
 
         title: null,
 
-        currentDrift: null,
+        infoPanel: null,
+        infoTextName: null,
+        infoTextOG: null,
+        infoTextABV: null,
+        infoTextIBU: null,
+        infoTextStyle: null,
 
-        //beer2: null,
-        //beer1: null,
+        currentDrift: null,
 
         start: function() {
             this.game = new Phaser.Game(1024, 768, Phaser.AUTO, 'gameWindow', {
@@ -60,14 +64,47 @@ define([
             this.game.camera.x = this.stableCameraX;
             this.game.camera.y = this.stableCameraY;
 
-            this.background = this.game.add.image(512,384, 'sky');//.anchor.set(0.5);
+            this.background = this.game.add.image(512,384, 'sky');
             this.background.scale.setTo(2);
             this.background.anchor.setTo(0.5, 0.5);
             this.background.fixedToCamera = true;
 
-            //this.title = this.game.add.text(-1270,-960, "BeerQuest", {font: "64px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
             this.title = this.game.add.text(0,0, "BeerQuest", {font: "64px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
             this.title.fixedToCamera = true;
+
+            this.infoPanel = this.game.add.text(0,546, "Current Beer Information", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.infoPanel.fixedToCamera = true;
+
+            var itn = this.game.add.text(0,0, "Name:", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.infoPanel.addChild(itn);
+            itn.y = 36;
+            this.infoTextName = this.game.add.text(0,0, "", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            
+            itn.addChild(this.infoTextName);
+
+            var itog = this.game.add.text(0,0, "Original Gravity:", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            itn.addChild(itog);
+            itog.y = 36;
+            this.infoTextOG = this.game.add.text(0,0, "", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            itog.addChild(this.infoTextOG);
+
+            var itabv = this.game.add.text(0,0, "ABV:", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            itog.addChild(itabv);
+            itabv.y = 36;
+            this.infoTextABV = this.game.add.text(0,0, "", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            itabv.addChild(this.infoTextABV);
+
+            var itibu = this.game.add.text(0,0, "IBU:", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            itabv.addChild(itibu);
+            itibu.y = 36;
+            this.infoTextIBU = this.game.add.text(0,0, "", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            itibu.addChild(this.infoTextIBU);
+
+            var its = this.game.add.text(0,0, "Style:", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            itibu.addChild(its);
+            its.y = 36;
+            this.infoTextStyle = this.game.add.text(0,0, "", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            its.addChild(this.infoTextStyle);
 
             this.backGroup = this.game.add.group();
             this.middleGroup = this.game.add.group();
@@ -79,7 +116,6 @@ define([
 
             this.getBeers();
 
-
         },
 
 
@@ -87,60 +123,58 @@ define([
             console.log('Sprite clicked: ' + sprite);
         },
 
+        //Paralax scrolling right-left
+        //mouseover beer to see stats and freeze beer
+        //hold mouse button down to freeze all beers
+
+
+
         update: function()
         {
             if (this.cursors.left.isDown) {
 
                 this.game.camera.x -= 6;
                 this.middleGroup.x += 1;
-                this.backGroup.x += 2;
+                this.frontGroup.x += 2;
             }
             else if (this.cursors.right.isDown) {
                 this.game.camera.x += 6;
                 this.middleGroup.x -= 1;
-                this.backGroup.x -= 2;
+                this.frontGroup.x -= 2;
             } else {
                 if (this.game.camera.x < this.stableCameraX) {
                     this.game.camera.x += 6;
                     this.middleGroup.x -= 1;
-                    this.backGroup.x -= 2;
+                    this.frontGroup.x -= 2;
                 }
                 if (this.game.camera.x > this.stableCameraX) {
                     this.game.camera.x -= 6;
                     this.middleGroup.x += 1;
-                    this.backGroup.x += 2;
+                    this.frontGroup.x += 2;
                 }
             }
 
             if (this.cursors.up.isDown) {
                 this.game.camera.y -= 6;
                 this.middleGroup.y += 2;
-                this.backGroup.y += 4;
+                this.frontGroup.y += 4;
             } else if (this.cursors.down.isDown) {
                 this.game.camera.y += 6;
                 this.middleGroup.y -= 1;
-                this.backGroup.y -= 2;
+                this.frontGroup.y -= 2;
             } else {
                 if (this.game.camera.y < this.stableCameraY) {
                     this.game.camera.y += 6;
                     this.middleGroup.y -= 1;
-                    this.backGroup.y -= 2;
+                    this.frontGroup.y -= 2;
                 }
                 if (this.game.camera.y > this.stableCameraY) {
                     this.game.camera.y -= 6;
                     this.middleGroup.y += 1;
-                    this.backGroup.y += 2;
+                    this.frontGroup.y += 2;
                 }
             }
 
-            // change this value to alter the amount of damping, lower values = smoother camera movement
-            //var lerp = 0.1;
-            //cameraPos.x += (this.square.x - cameraPos.x) * lerp;
-            //cameraPos.y += (this.square.y - cameraPos.y) * lerp;
-
-            //this.game.camera.focusOnXY(this.cameraPos.x, this.cameraPos.y);
-            //this.beerTwo.x = this.game.camera.x * - 0.5;
-            //this.beerTwo.y = this.game.camera.y * -0.5;
         },
 
 
