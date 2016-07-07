@@ -42,7 +42,9 @@ define([
                 addBeerCallback: this.addBeerCallback,
                 addBeer: this.addBeer,
                 getBeers: this.getBeers,
-                spriteClick: this.spriteClick
+                spriteClick: this.spriteClick,
+                spriteOver: this.spriteOver,
+                mouseHold: this.mouseHold
 
             });
         },
@@ -127,9 +129,46 @@ define([
 
         },
 
+        mouseHold: function(event, sprite) {
+
+        },
+
+        spriteOver: function(event, sprite) {
+
+            console.log('Sprite Over');
+            var beerData = sprite.beerData;
+
+            if (beerData) {
+                this.infoTextName.setText(beerData.name);
+                this.infoTextOG.setText(beerData.originalGravity ? beerData.originalGravity : "Unknown");
+                this.infoTextABV.setText(beerData.abv ? beerData.abv : "Unknown");
+                this.infoTextIBU.setText(beerData.ibu ? beerData.ibu : "Unknown");
+                if (beerData.style) {
+                    this.infoTextStyle.setText(beerData.style.name ? beerData.style.name : "Unknown");
+                } else {
+                    this.infoTextStyle.setText("Unknown");
+                }
+            } else {
+                this.infoTextName.setText("Unknown");
+                this.infoTextOG.setText("Unknown");
+                this.infoTextABV.setText("Unknown");
+                this.infoTextIBU.setText("Unknown");
+                this.infoTextStyle.setText("Unknown");
+            }
+
+        },
 
         spriteClick: function(event, sprite) {
-            console.log('Sprite clicked: ' + sprite);
+            //var beerData = sprite.beerData;
+            //
+            //infoTextName: null,
+            //    infoTextOG: null,
+            //    infoTextABV: null,
+            //    infoTextIBU: null,
+            //    infoTextStyle: null,
+            //
+
+                console.log('Sprite clicked: ' + sprite);
         },
 
         //Paralax scrolling right-left
@@ -209,6 +248,7 @@ define([
             beer.anchor.setTo(0.5, 0.5);
             beer.inputEnabled = true;
             beer.events.onInputUp.add(this.spriteClick, this);
+            beer.events.onInputOver.add(this.spriteOver, this);
             var distance = this.game.rnd.integerInRange(0,2);
             if (distance < 1) {
                 beer.scale.setTo(1);
@@ -220,6 +260,7 @@ define([
                 beer.scale.setTo(0.25);
                 this.backGroup.add(beer);
             }
+            beer.beerData = beerData;
             this.beers.push(beer);
             var beerText = this.game.add.text(beer.x,beer.y, beerData.name, {font: "32px Arial", fill: "#000000"})
             beer.addChild(beerText);
