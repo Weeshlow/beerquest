@@ -34,17 +34,32 @@ define([
             beerTwo.scale.setTo(0.25, 0.25);
             beerTwo.anchor.setTo(0.5, 0.5);
 
-            this.httpGet('http://api.brewerydb.com/v2/?key=7d1915a6aa7315b63c14b5464c3e2476/search?q=Goosinator&type=beer', function(data){console.log('Data: ' + data)});
+            this.httpGet('http://localhost:8080/v2/?key=7d1915a6aa7315b63c14b5464c3e2476/search?q=Goosinator&type=beer', this.addBeerCallback);
+            //this.httpGet('http://localhost:8081/v2/?key=7d1915a6aa7315b63c14b5464c3e2476/search?q=Goosinator&type=beer', function(data){console.log('Data: ' + data)});
+            //this.httpGet('http://localhost:8080/', function(data){console.log('Data: ' + data)});
+            //this.httpGet('http://localhost:8080/v2', this.addBeerCallback);
 
 
+        },
+
+        addBeerCallback: function(response) {
+            this.addBeer('Beer here.');
+        },
+
+        addBeer: function(beer) {
+            console.log('Beer: ' + beer );
         },
 
         httpGet: function(theUrl, callback)
         {
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.onreadystatechange = function() {
-                if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
                     callback(xmlHttp.responseText);
+                } else {
+                    console.log('Error:' + xmlHttp.responseText);
+                }
+
             }
             xmlHttp.open("GET", theUrl, true); // true for asynchronous
             xmlHttp.send(null);
