@@ -197,9 +197,7 @@ define([
 
 
           for (var i = 0; i < this.beers.length; i++) {
-            if (this.beers[i].freeze) {
-              console.log('Frozen beer');
-            } else {
+            if (!this.beers[i].freeze) {
               this.beers[i].x = this.beers[i].x - 6 * this.beers[i].scale.x;
             }
 
@@ -229,7 +227,7 @@ define([
 
         addBeer: function(beerData) {
 
-          var beer = this.game.add.sprite(1088, this.game.rnd.integerInRange(0,546), 'beermug2');
+          var beer = this.game.add.sprite(1088, this.game.rnd.integerInRange(32,512), 'beermug2');
             beer.anchor.setTo(0.5, 0.5);
             beer.inputEnabled = true;
             beer.events.onInputUp.add(this.spriteClick, this);
