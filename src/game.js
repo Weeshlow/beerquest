@@ -207,7 +207,7 @@ define([
 
         addRandomBeer: function() {
           // this.httpGet('http://localhost:8080/v2/?key=7d1915a6aa7315b63c14b5464c3e2476/beer/random', this.addBeerCallback);
-          this.httpGet('http://api.brewerydb.com/v2/?key=7d1915a6aa7315b63c14b5464c3e2476/beer/random', this.addBeerCallback);
+          //this.httpGet('http://api.brewerydb.com/v2/?key=7d1915a6aa7315b63c14b5464c3e2476/beer/random', this.addBeerCallback);
 
           this.addBeer({
               name: "Test Beer",
