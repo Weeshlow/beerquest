@@ -208,17 +208,17 @@ define([
         },
 
         addRandomBeer: function() {
-          // this.httpGet('http://localhost:8080/v2/?key=7d1915a6aa7315b63c14b5464c3e2476/beer/random', this.addBeerCallback);
-          //this.httpGet('http://api.brewerydb.com/v2/?key=7d1915a6aa7315b63c14b5464c3e2476/beer/random', this.addBeerCallback);
+          // this.httpGet('http://localhost:8080/v2/beer/random', this.addBeerCallback);
+          this.httpGet('http://api.brewerydb.com/v2/beer/random?key=74e3677f9d50024ce74395b5e2e88cde', this.addBeerCallback, this);
 
-          this.addBeer({
-              name: this.randomNameGenerator(),
-              id: this.game.rnd.integerInRange(-1000000,1000000),
-              originalGravity: this.game.rnd.realInRange(1.0, 1.12),
-              abv: this.game.rnd.integerInRange(0,100),
-              ibu: this.game.rnd.integerInRange(0,120),
-              style: {name:'beer'}
-            });
+          //this.addBeer({
+          //    name: this.randomNameGenerator(),
+          //    id: this.game.rnd.integerInRange(-1000000,1000000),
+          //    originalGravity: this.game.rnd.realInRange(1.0, 1.12),
+          //    abv: this.game.rnd.integerInRange(0,100),
+          //    ibu: this.game.rnd.integerInRange(0,120),
+          //    style: {name:'beer'}
+          //  });
         },
 
         getBeers: function() {
@@ -231,8 +231,8 @@ define([
         },
 
 
-        addBeerCallback: function(response) {
-            this.addBeer({name: 'name', id: 'id'});
+        addBeerCallback: function(response, context) {
+            context.addBeer(JSON.parse(response).data);
         },
 
 
@@ -267,12 +267,12 @@ define([
             emitter.start(false, 3000, 300);
         },
 
-        httpGet: function(theUrl, callback)
+        httpGet: function(theUrl, callback, context)
         {
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.onreadystatechange = function() {
                 if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-                    callback(xmlHttp.responseText);
+                    callback(xmlHttp.responseText, context);
                 } else {
                     console.log(xmlHttp.responseText);
                 }
