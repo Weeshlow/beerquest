@@ -54,6 +54,7 @@ define([
             this.game.load.image('beermug', 'assets/images/beermug.svg'); //Attribution: Twitter
             this.game.load.image('beermug2', 'assets/images/beermug2.svg'); //Attribution: Google (Noto)
             this.game.load.image('sky', 'assets/images/sky.jpg'); //Attribution: Joniprittie
+            this.game.load.image('whiteCircle', 'assets/images/white_circle.png');
             this.game.time.advancedTiming = true;
 
         },
