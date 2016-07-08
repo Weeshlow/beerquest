@@ -4,7 +4,6 @@ define([
     'use strict';
 
     function Game() {
-        console.log('Making the Game');
     }
 
     Game.prototype = {
@@ -42,8 +41,10 @@ define([
                 addBeerCallback: this.addBeerCallback,
                 addBeer: this.addBeer,
                 getBeers: this.getBeers,
+                addRandomBeer: this.addRandomBeer,
                 spriteClick: this.spriteClick,
                 spriteOver: this.spriteOver,
+                spriteOut: this.spriteOut,
                 mouseHold: this.mouseHold
 
             });
@@ -60,9 +61,9 @@ define([
 
         create: function() {
 
-            this.game.world.setBounds(-1536, -1152, 1536, 1152);
-            this.stableCameraX = this.game.world.centerX - 512;
-            this.stableCameraY = this.game.world.centerY - 384;
+            this.game.world.setBounds(0, 0, 1024, 768);
+            this.stableCameraX = this.game.world.centerX;
+            this.stableCameraY = this.game.world.centerY;
             this.game.camera.x = this.stableCameraX;
             this.game.camera.y = this.stableCameraY;
 
@@ -71,8 +72,25 @@ define([
             this.background.anchor.setTo(0.5, 0.5);
             this.background.fixedToCamera = true;
 
-            this.title = this.game.add.text(0,0, "BeerQuest", {font: "64px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+
+            var rectangle = this.game.add.graphics(0, 546);
+            // set a fill and line style
+            rectangle.beginFill(0xFF9900);
+            rectangle.lineStyle(10, 0xFF9900, 1);
+
+            // draw a rectangle
+            rectangle.lineStyle(1, 0xFF9900, 1);
+            rectangle.drawRect(0, 0, 1024, 222);
+
+
+
+
+
+            this.title = this.game.add.text(1022,546, "BeerQuest", {font: "64px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
+            this.title.anchor.setTo(1.0, 0.0);
             this.title.fixedToCamera = true;
+
+            // button = game.add.button(game.world.centerX - 95, 400, 'button', actionOnClick, this, 2, 1, 0);
 
             this.infoPanel = this.game.add.text(0,546, "Current Beer Information", {font: "32px Arial", fill: "#FFFFFF", backgroundColor: "#FF9900"});
             this.infoPanel.fixedToCamera = true;
@@ -125,17 +143,19 @@ define([
 
             this.cursors = this.game.input.keyboard.createCursorKeys();
 
-            this.getBeers();
+            this.game.time.events.repeat(Phaser.Timer.SECOND, 1000, this.addRandomBeer, this);
 
         },
 
-        mouseHold: function(event, sprite) {
+        mouseHold: function(sprite) {
 
         },
 
-        spriteOver: function(event, sprite) {
+        spriteOver: function(sprite) {
 
-            console.log('Sprite Over');
+
+            sprite.freeze = true;
+
             var beerData = sprite.beerData;
 
             if (beerData) {
@@ -158,17 +178,12 @@ define([
 
         },
 
-        spriteClick: function(event, sprite) {
-            //var beerData = sprite.beerData;
-            //
-            //infoTextName: null,
-            //    infoTextOG: null,
-            //    infoTextABV: null,
-            //    infoTextIBU: null,
-            //    infoTextStyle: null,
-            //
+        spriteOut: function(sprite) {
+          sprite.freeze = false;
+        },
 
-                console.log('Sprite clicked: ' + sprite);
+
+        spriteClick: function(event, sprite) {
         },
 
         //Paralax scrolling right-left
@@ -179,87 +194,49 @@ define([
 
         update: function()
         {
-            if (this.cursors.left.isDown) {
 
-                this.game.camera.x -= 6;
-                this.middleGroup.x += 1;
-                this.frontGroup.x += 2;
-            }
-            else if (this.cursors.right.isDown) {
-                this.game.camera.x += 6;
-                this.middleGroup.x -= 1;
-                this.frontGroup.x -= 2;
+
+          for (var i = 0; i < this.beers.length; i++) {
+            if (this.beers[i].freeze) {
+              console.log('Frozen beer');
             } else {
-                if (this.game.camera.x < this.stableCameraX) {
-                    this.game.camera.x += 6;
-                    this.middleGroup.x -= 1;
-                    this.frontGroup.x -= 2;
-                }
-                if (this.game.camera.x > this.stableCameraX) {
-                    this.game.camera.x -= 6;
-                    this.middleGroup.x += 1;
-                    this.frontGroup.x += 2;
-                }
+              this.beers[i].x = this.beers[i].x - 6 * this.beers[i].scale.x;
             }
 
-            if (this.cursors.up.isDown) {
-                this.game.camera.y -= 6;
-                this.middleGroup.y += 2;
-                this.frontGroup.y += 4;
-            } else if (this.cursors.down.isDown) {
-                this.game.camera.y += 6;
-                this.middleGroup.y -= 1;
-                this.frontGroup.y -= 2;
-            } else {
-                if (this.game.camera.y < this.stableCameraY) {
-                    this.game.camera.y += 6;
-                    this.middleGroup.y -= 1;
-                    this.frontGroup.y -= 2;
-                }
-                if (this.game.camera.y > this.stableCameraY) {
-                    this.game.camera.y -= 6;
-                    this.middleGroup.y += 1;
-                    this.frontGroup.y += 2;
-                }
-            }
+          }
 
         },
 
+        addRandomBeer: function() {
+          this.httpGet('http://localhost:8080/v2/?key=7d1915a6aa7315b63c14b5464c3e2476/beer/random', this.addBeerCallback);
+
+          this.addBeer({name: "Test Beer", id: this.game.rnd.integerInRange(-1000000,1000000)});
+        },
 
         getBeers: function() {
 
-            //this.httpGet('http://localhost:8080/v2/?key=7d1915a6aa7315b63c14b5464c3e2476/search?q=Goosinator&type=beer', this.addBeerCallback);
-
             var beer = null;
             for (var i = 0; i < 10; i++) {
-                this.addBeer({name: "Beer"+i});
+                this.addBeer({name: "Test Beer", id: this.game.rnd.integerInRange(-1000000,1000000)});
             }
 
         },
 
 
         addBeerCallback: function(response) {
-            this.addBeer('Beer here.');
+            this.addBeer({name: 'name', id: 'id'});
         },
 
         addBeer: function(beerData) {
 
-            var beer = this.game.add.sprite(this.game.rnd.integerInRange(-1024,-512), this.game.rnd.integerInRange(-768,-384), 'beermug2');
+          var beer = this.game.add.sprite(1088, this.game.rnd.integerInRange(0,546), 'beermug2');
             beer.anchor.setTo(0.5, 0.5);
             beer.inputEnabled = true;
             beer.events.onInputUp.add(this.spriteClick, this);
             beer.events.onInputOver.add(this.spriteOver, this);
-            var distance = this.game.rnd.integerInRange(0,2);
-            if (distance < 1) {
-                beer.scale.setTo(1);
-                this.frontGroup.add(beer);
-            } else if (distance < 2) {
-                beer.scale.setTo(0.5);
-                this.middleGroup.add(beer);
-            } else {
-                beer.scale.setTo(0.25);
-                this.backGroup.add(beer);
-            }
+            beer.events.onInputOut.add(this.spriteOut, this);
+            var scale = this.game.rnd.realInRange(0.25,1.0);
+            beer.scale.setTo(scale);
             beer.beerData = beerData;
             this.beers.push(beer);
             var beerText = this.game.add.text(beer.x,beer.y, beerData.name, {font: "32px Arial", fill: "#000000"})
