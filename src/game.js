@@ -250,6 +250,19 @@ define([
             beer.addChild(beerText);
             beerText.x = 0;
             beerText.y = 0;
+            var emitter = this.game.add.emitter(0,0,128);
+            emitter.width = 30;
+            emitter.makeParticles('whiteCircle');
+            emitter.minParticleSpeed.set(0,0);
+            emitter.maxParticleSpeed.set(10, 128);
+            emitter.setRotation(0, 0);
+            emitter.setAlpha(0.3, 1.0);
+            emitter.setScale(0.015625, 0.0625, 0.015625, 0.0625);
+            emitter.gravity = 100;
+
+            beer.addChild(emitter);
+            emitter.y = -10
+            emitter.start(false, 3000, 300);
         },
 
         httpGet: function(theUrl, callback)
